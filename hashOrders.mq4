@@ -5,7 +5,15 @@
 //+------------------------------------------------------------------+
 #property copyright "d0as8"
 #property version   "1.00"
-#property strict
+#property script_show_inputs
+
+enum HASH_TYPE {
+   MD5    = CRYPT_HASH_MD5,
+   SHA1   = CRYPT_HASH_SHA1,
+   SHA256 = CRYPT_HASH_SHA256
+};
+
+input HASH_TYPE hashType = SHA1; // Hash type
 
 void OnStart() {
    string orderStr = "";
@@ -17,8 +25,8 @@ void OnStart() {
          orderStr = OrderFormat();
          StringToCharArray( orderStr, order, 0, StringLen( orderStr ), CP_ACP );
 
-         if ( 0 < CryptEncode( CRYPT_HASH_SHA1, order, key, hash ) ) {
-            PrintFormat( "Order: '%s', SHA1: '%s'", orderStr, ArrayToHex( hash ) );
+         if ( 0 < CryptEncode( hashType, order, key, hash ) ) {
+            PrintFormat( "Order: '%s', Hash: '%s'", orderStr, ArrayToHex( hash ) );
          } else {
             PrintFormat( "Order: '%s', ErrorCode: '%s'", orderStr, GetLastError() );
          }
